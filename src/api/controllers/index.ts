@@ -1,5 +1,11 @@
 import { getUser } from "./users/getUser.controller";
+import { registerUser } from "./users/registerUser.controller";
 
 export const apiController = {
-  user: { getUser: getUser },
+  auth: {
+    registerUser: registerUser,
+  },
+  user: {
+    getUser: getUser,
+  },
 };
