@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String },
   mobile: { type: Number },
   address: { type: String },
-  profile: { type: String },
+  profileImage: { type: String },
 });
 
 const UserModel = mongoose.model<IUser>("User", UserSchema);

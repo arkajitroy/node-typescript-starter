@@ -4,11 +4,7 @@ import { JWT_SECRET_KEY } from "../config/config";
 import { StatusCodes } from "http-status-codes";
 import UserModel from "../model/users/Users.model";
 
-export const isAuthenticated = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // access authorize header to validate request
     const token = req.headers.authorization.split(" ")[1];
@@ -30,11 +26,7 @@ export const isAuthenticated = async (
   }
 };
 
-export const verifyUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { username } = req.method == "GET" ? req.query : req.body;
 

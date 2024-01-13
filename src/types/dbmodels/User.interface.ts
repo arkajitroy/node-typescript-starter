@@ -8,5 +8,5 @@ export interface IUser extends Document {
   lastName?: string;
   mobile?: number;
   address?: string;
-  profile?: string;
+  profileImage?: string;
 }
