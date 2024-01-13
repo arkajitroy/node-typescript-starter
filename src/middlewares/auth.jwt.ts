@@ -1,12 +1,13 @@
 import jwt from "jsonwebtoken";
-import express from "express";
+import { NextFunction, Request, Response } from "express";
 import { JWT_SECRET_KEY } from "../config/config";
 import { StatusCodes } from "http-status-codes";
+import UserModel from "../model/users/Users.model";
 
 export const isAuthenticated = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     // access authorize header to validate request
@@ -26,5 +27,27 @@ export const isAuthenticated = async (
       error: error,
       token: req.header("token"),
     });
+  }
+};
+
+export const verifyUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { username } = req.method == "GET" ? req.query : req.body;
+
+    const userInstance = await UserModel.findOne({ username });
+
+    if (!userInstance) {
+      return res.status(StatusCodes.NOT_FOUND).send({
+        message: "User dont exist!",
+      });
+    }
+
+    next();
+  } catch (error: any) {
+    return res.status(StatusCodes.NOT_FOUND).send({ error });
   }
 };
