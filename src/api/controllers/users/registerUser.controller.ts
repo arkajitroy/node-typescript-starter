@@ -10,7 +10,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     const { username, password, profileImage, email } = req.body;
 
     // Check the existing user
-    const existUsername = await services.user.duplicateUsernameCheck(username);
+    const existUsername = await services.users.duplicateUsernameCheck(username);
     if (existUsername) {
       res.status(StatusCodes.BAD_REQUEST).send({
         message: "Username Exists! Please try again",
@@ -18,7 +18,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     }
 
     // Check for existing email
-    const existEmail = await services.user.duplicateEmailCheck(email);
+    const existEmail = await services.users.duplicateEmailCheck(email);
     if (existEmail) {
       res.status(StatusCodes.BAD_REQUEST).send({
         message: "Email Exists! Please try again",
