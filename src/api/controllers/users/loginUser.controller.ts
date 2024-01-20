@@ -6,13 +6,13 @@ import { JWT_SECRET_KEY } from "../../../config/config";
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    const { username, password }: { username: string; password: string } = req.body;
+    const { username, password } = req.body;
 
     const userInstance = await services.users.getUserInstanceByUsername(username, res);
 
     // check wheather the password is empty or not
     if (!password || password.length === 0) {
-      return res.json(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
         message: "Password is invalid or password is empty",
       });
     }
@@ -24,13 +24,13 @@ export const loginUser = async (req: Request, res: Response) => {
     };
     const token = jwt.sign(jwtUserPayload, JWT_SECRET_KEY, { expiresIn: "24h" });
 
-    return res.send(StatusCodes.OK).send({
+    return res.status(StatusCodes.OK).send({
       message: "Successfully Logged in",
       username: userInstance.username,
       token,
     });
   } catch (error) {
-    return res.json(StatusCodes.INTERNAL_SERVER_ERROR).send({
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
       error: "Cannot Find user Data",
     });
   }
