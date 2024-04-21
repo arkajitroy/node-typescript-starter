@@ -1,10 +1,54 @@
-import { TUser } from '@/@types/models/TUsers.schema';
-import { services } from '@/api/services';
-import UserModel from '@/models/users.model';
-import { utility } from '@/utils';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { FilterQuery, UpdateQuery } from 'mongoose';
+import { services } from '../../services';
+import { utility } from '../../../utils';
+import UserModel from '../../../models/users.model';
+import { TUser } from '../../../@types/models/TUsers.schema';
+
+export const register = async (req: Request, res: Response) => {
+  try {
+    const { username, password, profile, email } = req.body;
+
+    // Edge Cases: Checking for existing Username and Email Id
+    const existingUsername = await services.auth.duplicateUsernameCheck(username);
+
+    if (existingUsername) {
+      return res.status(StatusCodes.CONFLICT).send({
+        error: 'Failed to Register! Username already exists.',
+      });
+    }
+
+    const existingEmailId = await services.auth.duplicateEmailCheck(email);
+
+    if (existingEmailId) {
+      return res.status(StatusCodes.CONFLICT).send({
+        error: 'Failed to Register! Email already exists.',
+      });
+    }
+
+    const hashedPassword = await utility.password.generateHashedPassword(password);
+
+    const newUserCreationPayload = {
+      username,
+      password: hashedPassword,
+      profile: profile || '',
+      email,
+    };
+
+    const newUserCreationInstance = await new UserModel(newUserCreationPayload).save();
+
+    // Return success response
+    res.status(StatusCodes.CREATED).send({
+      message: 'Successfully User has been created!',
+      newUserCreationInstance,
+    });
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      error: 'Failed to Register!',
+    });
+  }
+};
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {

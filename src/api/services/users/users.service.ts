@@ -1,6 +1,6 @@
-import { TUserOmitPassword } from '@/@types/api/IUser';
-import { TUser } from '@/@types/models/TUsers.schema';
-import UserModel from '@/models/users.model';
+import { TUserOmitPassword } from '../../../@types/api/IUser';
+import { TUser } from '../../../@types/models/TUsers.schema';
+import UserModel from '../../../models/users.model';
 
 export const getUserInstanceByUsername = async (username: string): Promise<TUserOmitPassword | null> => {
   const userInstance: TUser | null = await UserModel.findOne({ username });

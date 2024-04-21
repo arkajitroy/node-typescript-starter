@@ -1,4 +1,4 @@
-import UserModel from '@/models/users.model';
+import UserModel from '../../../models/users.model';
 
 export const duplicateUsernameCheck = async (username: string): Promise<boolean> => {
   const usernameInstance = await UserModel.findOne({ username });
