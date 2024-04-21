@@ -12,7 +12,10 @@ export const JWT_SECRET_KEY = '843b3d3a120cdc5e38be93315a8cd1d402546177ee4e1fbda
 
 // SMTP-MAIL SERVICE - https://ethereal.email/
 export const SMTP_CONFIG_CREDENTIALS = {
-  name: 'Dedric Swaniawski',
-  email: 'dedric86@ethereal.email',
-  password: '4v8RhWksWRBYARRD5P',
+  name: 'Damon Huel',
+  email: 'damon.huel@ethereal.email',
+  password: '7GGm4JsGdsZUk2WBPa',
 };
+
+// EMAIL CONFIGURATIONS
+export const SENDERS_MAIL = 'nodeserver@mail.com';

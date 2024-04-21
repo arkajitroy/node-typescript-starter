@@ -1,8 +1,8 @@
 import Mailgen from 'mailgen';
 import { SMTP_CONFIG_CREDENTIALS } from './config';
-import { createTransport } from 'nodemailer';
+import { createTransport, SentMessageInfo } from 'nodemailer';
 
-export const nodeMailerConfig = {
+export const nodeMailerConfig: SentMessageInfo = {
   host: 'smtp.ethereal.email',
   port: 587,
   secure: false, // true for 465, false for other ports
