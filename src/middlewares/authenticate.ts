@@ -1,27 +1,30 @@
-import { NextFunction, Response } from 'express';
-import { JWT_SECRET_KEY } from '@/config/config';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { StatusCodes } from 'http-status-codes';
-import { TExpressRequest } from '@/@types/others/TExpress';
-import UserModel from '@/models/users.model';
+import { NextFunction, Request, Response } from 'express';
+import { utility } from '../utils';
+import UserModel from '../models/users.model';
 
-export const isAuthenticated = async (req: TExpressRequest, res: Response, next: NextFunction) => {
+export const isAuthenticated = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    // access authorize header to validate request
-    const token: string | undefined = req.headers.authorization?.split(' ')[1];
+    // initially checking for the headers
+    const authHeader = req.headers.authorization;
 
-    if (!token) return new Error('Authorization token not found');
+    if (!authHeader) {
+      return next({
+        error: 'The User is not Authenticated',
+      });
+    }
 
-    // retrieve the user details for the logged-in user
-    const decodedToken: string | JwtPayload = await jwt.verify(token, JWT_SECRET_KEY);
+    const token = authHeader.split(' ')[1];
 
-    req.user = decodedToken;
-
+    const { _id, role } = await utility.jwt.verifyJwt(token);
+    const user = {
+      _id,
+      role,
+    };
+    req.user = user;
     next();
-
-    return next();
   } catch (error: unknown) {
-    return res.json(StatusCodes.BAD_REQUEST).send({
+    next({
+      status: 500,
       message: 'Invalid Token!',
       error: error,
       token: req.header('token'),
@@ -29,20 +32,22 @@ export const isAuthenticated = async (req: TExpressRequest, res: Response, next:
   }
 };
 
-export const verifyUser = async (req: TExpressRequest, res: Response, next: NextFunction) => {
+export const validate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { username } = req.method == 'GET' ? req.query : req.body;
-
-    const userInstance = await UserModel.findOne({ username });
-
-    if (!userInstance) {
-      return res.status(StatusCodes.NOT_FOUND).send({
-        message: 'User dont exist!',
+    const user = await UserModel.findOne({ _id: req.user?._id });
+    if (user?.role === 'admin') {
+      next();
+    } else {
+      return next({
+        message: 'Something went wrong while validating!',
+        status: 401,
       });
     }
-
-    next();
   } catch (error: unknown) {
-    return res.status(StatusCodes.NOT_FOUND).send({ error });
+    return next({
+      status: 500,
+      message: 'Something went wrong while validating!',
+      error,
+    });
   }
 };
