@@ -10,12 +10,5 @@ export const DATABASE_NAME = 'node_server_backend';
 // JWT-AUTHENTICATIONS
 export const JWT_SECRET_KEY = '843b3d3a120cdc5e38be93315a8cd1d402546177ee4e1fbdaf6c7edc5fe57f56';
 
-// SMTP-MAIL SERVICE - https://ethereal.email/
-export const SMTP_CONFIG_CREDENTIALS = {
-  name: 'Damon Huel',
-  email: 'damon.huel@ethereal.email',
-  password: '7GGm4JsGdsZUk2WBPa',
-};
-
-// EMAIL CONFIGURATIONS
-export const SENDERS_MAIL = 'nodeserver@mail.com';
+// APP-URL
+export const LOCAL_APP_URL = `http://${LOCAL_IP}:${LOCAL_SERVER_PORT}`;
