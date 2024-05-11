@@ -1,5 +1,5 @@
-import { Types } from 'mongoose'
+import { Types } from 'mongoose';
 
-export type TObjectId = {
-    _id: Types.ObjectId
+export interface TObjectId {
+  _id: Types.ObjectId;
 }

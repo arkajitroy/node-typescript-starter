@@ -1,6 +1,6 @@
 import { TObjectId } from '../others/TObjectId';
 
-export interface IProductSchema extends Document {
+export interface IProductSchema {
   name: string;
   price: number;
   size: string;

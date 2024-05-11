@@ -4,7 +4,7 @@ import { FilterQuery, UpdateQuery } from 'mongoose';
 import { services } from '../../services';
 import { utility } from '../../../utils';
 import UserModel from '../../../models/users.model';
-import { TUser } from '../../../@types/models/TUsers.schema';
+import { TUser } from '../../../@types/models/IUsers.schema';
 
 export const register = async (req: Request, res: Response) => {
   try {

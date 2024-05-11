@@ -1,5 +1,5 @@
 import { TUserOmitPassword } from '../../../@types/api/IUser';
-import { TUser } from '../../../@types/models/TUsers.schema';
+import { TUser } from '../../../@types/models/IUsers.schema';
 import UserModel from '../../../models/users.model';
 
 export const getUserInstanceByUsername = async (username: string): Promise<TUserOmitPassword | null> => {

@@ -1,29 +1,18 @@
-import mongoose, { Schema, Model } from 'mongoose';
-import { IUserSchema } from '../@types/models/TUsers.schema';
+import mongoose, { Model } from 'mongoose';
+import { IUserSchema } from '../@types/models/IUsers.schema';
 
-const UserSchema: Schema = new Schema({
-  username: {
-    type: String,
-    required: [true, 'Please provide a unique username'],
-    unique: [true, 'Username already exists'],
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-    unique: false,
-  },
-  email: {
-    type: String,
-    required: [true, 'Please provide a unique email'],
-    unique: true,
-  },
-  firstName: { type: String },
-  lastName: { type: String },
-  mobile: { type: Number },
-  address: { type: String },
-  profile: { type: String },
-});
+const { Schema } = mongoose;
 
-const UserModel: Model<IUserSchema> = mongoose.model<IUserSchema>('User', UserSchema);
+const userSchema = new Schema<IUserSchema>(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, default: 'customer' },
+  },
+  { timestamps: true },
+);
+
+const UserModel: Model<IUserSchema> = mongoose.model<IUserSchema>('User', userSchema, 'users');
 
 export default UserModel;
