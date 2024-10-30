@@ -1,9 +1,8 @@
 import mongoose, { Model } from 'mongoose';
-import { IUserSchema } from '../@types/models/IUsers.schema';
-
+import { IUser } from '../@types';
 const { Schema } = mongoose;
 
-const userSchema = new Schema<IUserSchema>(
+const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -13,6 +12,6 @@ const userSchema = new Schema<IUserSchema>(
   { timestamps: true },
 );
 
-const UserModel: Model<IUserSchema> = mongoose.model<IUserSchema>('User', userSchema, 'users');
+const UserModel: Model<IUser> = mongoose.model<IUser>('User', userSchema, 'users');
 
 export default UserModel;

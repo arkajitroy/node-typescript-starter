@@ -1,35 +1,36 @@
-import express from 'express';
-import cors from 'cors';
-import compression from 'compression';
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-import { LOCAL_SERVER_PORT } from './config/config';
+// =========================================== (MAIN SERVER FILE) ============================================
+
+import { createServer } from 'http';
+import { AppServer } from './app';
 import dbConnect from './config/db.config';
-import { Route } from './routes';
+import { LOCAL_SERVER_PORT } from './config/app.config';
+import useSocketIo from './config/socket.config';
 
-// Constants
-const app = express();
-dotenv.config();
+// initialization and configurations
+const HTTPServer = createServer(AppServer);
+const socketServer = useSocketIo(HTTPServer);
 
-// middlewares-configuration
-app.use(cors({ credentials: true }));
-app.use(express.json());
-app.use(compression());
-app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-
-// Routing Configuration
-app.use('/', (req, res) => res.send('Server is Running!'));
-app.use('/api', Route);
-app.use('/uploads', express.static('uploads'));
-
-// Server and Database Connection
+// server connections
 dbConnect()
   .then(() => {
-    app.listen(LOCAL_SERVER_PORT, () => {
-      console.log('The Backend Server is running @PORT', LOCAL_SERVER_PORT);
+    HTTPServer.listen(LOCAL_SERVER_PORT, () => {
+      console.log('Server is running!');
+    });
+
+    socketServer.on('connection', (socket) => {
+      console.log('New client is connected: id', socket.id);
+
+      // Example: Handling a custom event 'message'
+      socket.on('message', (data) => {
+        console.log(`Message received: ${data}`);
+        // Broadcasting to all clients except sender
+        socket.broadcast.emit('message', data);
+      });
+
+      // Handle disconnection
+      socket.on('disconnect', () => {
+        console.log('Client disconnected');
+      });
     });
   })
-  .catch((error: Error) => {
-    console.error('Failed to connect to the database:', error.message);
-  });
+  .catch((error) => console.error('Failed to connect database', error));
